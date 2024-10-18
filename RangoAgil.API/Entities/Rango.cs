@@ -10,7 +10,7 @@ public class Rango
 
     [Required]
     [MaxLength(200)]
-    public required string Nome { get; set; }//Dizendo que mesmo que no meu projeto esteja configurado para aceitar null o nome é obrigatorio
+    public required string Nome { get; set; } = null!;//Dizendo que mesmo que no meu projeto esteja configurado para aceitar null o nome é obrigatorio
     public ICollection<Ingrediente> Ingredientes { get; set; } = new List<Ingrediente>();//ICollection mostra que Rango pode ter varios objetos
                                                                             //Ingredientes ligado a ela e  com o new list monta uma lista delas
     public Rango()
