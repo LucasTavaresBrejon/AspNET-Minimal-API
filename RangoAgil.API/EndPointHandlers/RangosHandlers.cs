@@ -16,6 +16,7 @@ public static class RangosHandlers
                                                                                           //dentro dele haverá um parametro de lista da entidade Rango
     (RangoDbContext rangoDbContext,
     IMapper mapper,
+    ILogger<RangoDTO>logger,//injetando o logger
     [FromQuery(Name = "name")] string? rangoNome
     )
     {
@@ -23,12 +24,14 @@ public static class RangosHandlers
                     .Where(x => rangoNome == null || x.Nome.ToLower().Contains(rangoNome.ToLower()))
                     .ToListAsync()); //Retornando somente o registro com o mesmo id
 
-        if (rangosEntity.Count() > 0 || rangosEntity != null)
+        if (rangosEntity.Count() > 0 && rangosEntity != null)
         {
+            logger.LogInformation($"Rango encontrado");
             return TypedResults.Ok(rangosEntity);
         }
         else
         {
+            logger.LogInformation($"Rango não encontrado para os parametros: {rangoNome}");
             return TypedResults.NoContent();
         }
     }
