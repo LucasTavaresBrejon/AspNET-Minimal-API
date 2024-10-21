@@ -10,6 +10,8 @@ public class RangoAgilProfile : Profile //Necessario fazer a herança para o aut
     {
         //CreateMap(de onde, para onde).e faça o contrario também
         CreateMap<Rango,RangoDTO>().ReverseMap();
+        CreateMap<Rango, RangoForCreationDTO>().ReverseMap();
+        CreateMap<Rango, RangoForUpdateDTO>().ReverseMap();
         CreateMap<Ingrediente, IngredienteDTO>()
             .ForMember( //Utilizando o forMember eu digo que meu RangoId do ingredienteDTO receberá o primeiro Id que retornar da lista de Rango
                         //que esta dentro da classe Ingrediente, com isso o EF já mapeia e distribui o restante das id's com os itens da lista de forma sequencial
