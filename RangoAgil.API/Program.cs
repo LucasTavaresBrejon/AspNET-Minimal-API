@@ -20,6 +20,7 @@ if (!app.Environment.IsDevelopment()) // Verifica se estamos em desenvolvimento 
 {
     app.UseExceptionHandler();
 }
+
 app.RegisterRangosEndpoints();
 app.RegisterIngredientesEndPoints();
 

@@ -1,4 +1,6 @@
-﻿using RangoAgil.API.EndPointHandlers;
+﻿using RangoAgil.API.EndPointFilters;
+using RangoAgil.API.EndPointHandlers;
+using System.Runtime.CompilerServices;
 
 namespace RangoAgil.API.Extensions;
 
@@ -13,8 +15,10 @@ public static class EndPointRouteBuilderExtensions
         //ATENÇÃO, O ASYNC JUNTO COM AWAIT TRANSFORMAS NOSSOS ENDPOINTS EM ASSINCRONOS
         var rangosEndPoint = endpointRouteBuilder.MapGroup("/rangos");
         var rangosComIdEndPoint = rangosEndPoint.MapGroup("/{rangoId:int}");
-        //Agrupamento de endpoints
 
+        var rangosComIdEFilter = endpointRouteBuilder.MapGroup("/rangos/{rangoId:int}").AddEndpointFilter(new RangosFilters(1)) //Passando a nossa classe que contem o filtro para rangos com o parametro que sera usado
+                                                                                 .AddEndpointFilter(new RangosFilters(2)); // no construtor para dizer qual id é imutável; 
+        //Agrupamento de endpoints
         rangosEndPoint.MapGet("", RangosHandlers.GetRangoAsync);// O metodo estatico  GetRangoAsync esta sendo chamado sem () pq ele não vai ser executando na classe
                                                                 // e assim me devolvendo um retorno, mas sim vai me voltar ali todo o conteudo do metodo.
                                                                 // é como seu estivesse dando um copia e cola no metodo da classe para o nosso delegate.
@@ -38,16 +42,17 @@ public static class EndPointRouteBuilderExtensions
         //});
         #endregion
         #region POST
-        rangosEndPoint.MapPost("", RangosHandlers.PostRangoAsync);
+        rangosEndPoint.MapPost("", RangosHandlers.PostRangoAsync).AddEndpointFilter<ValidationAnnotationFilter>();
         #endregion
         #region Put
-        rangosComIdEndPoint.MapPut("", RangosHandlers.PutRangoAsync);
+        rangosComIdEFilter.MapPut("", RangosHandlers.PutRangoAsync);
         #endregion
         #region Delete
-        rangosComIdEndPoint.MapDelete("", RangosHandlers.DeleteRangosAsync);
+        rangosComIdEndPoint.MapDelete("", RangosHandlers.DeleteRangosAsync)
+            .AddEndpointFilter(new RangosFilters(1))//Passando a nossa classe que contem o filtro para rangos com o parametro que sera usado
+            .AddEndpointFilter(new RangosFilters(2)); //no construtor para dizer qual id é imutável;
         #endregion
     }
-
     public static void RegisterIngredientesEndPoints(this IEndpointRouteBuilder endpointRouteBuilder)
     {
         var rangosIngredientesEndPoint = endpointRouteBuilder.MapGroup("/rangos/{rangoId:int}/ingredientes");
